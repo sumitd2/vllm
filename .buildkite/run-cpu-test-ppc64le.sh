@@ -4,13 +4,13 @@
 # It serves a sanity check for compilation and basic model usage.
 set -ex
 
-# Try building the docker image
-docker build -t cpu-test -f Dockerfile.ppc64le .
-
 # Setup cleanup
-remove_docker_container() { docker rm -f cpu-test || true; }
+remove_docker_container() { docker rm -f cpu-test || true; docker system prune -f; }
 trap remove_docker_container EXIT
 remove_docker_container
+
+# Try building the docker image
+docker build -t cpu-test -f Dockerfile.ppc64le .
 
 # Run the image, setting --shm-size=4g for tensor parallel.
 source /etc/environment
